@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}User Dashboard{% endblock %}
+{% block content %}
+<h2>User Dashboard</h2>
+<form method="POST" style="max-width: 500px;">
+  <div class="mb-3">
+    <label for="box" class="form-label">Select Medical Box</label>
+    <select id="box" name="box" class="form-select" required>
+      <option value="" disabled selected>Select a box</option>
+      {% for box in boxes %}
+        <option value="{{ box }}">{{ box }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="latitude" class="form-label">Latitude</label>
+    <input type="number" step="any" id="latitude" name="latitude" class="form-control" required/>
+  </div>
+  <div class="mb-3">
+    <label for="longitude" class="form-label">Longitude</label>
+    <input type="number" step="any" id="longitude" name="longitude" class="form-control" required/>
+  </div>
+  <button type="submit" class="btn btn-success">Show on Map</button>
+</form>
+{% endblock %}
