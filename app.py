@@ -3,13 +3,13 @@ from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'defaultsecretkey')  # Change for prod!
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'defaultsecretkey')  # Change for production!
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# Simple user store — replace this with a real DB for prod
+# Simple user store — replace this with a real DB for production
 USERS = {
     'admin': {'password': 'adminpass', 'role': 'admin'},
     'user': {'password': 'userpass', 'role': 'user'}
@@ -95,25 +95,20 @@ def user_dashboard():
                 return redirect(url_for('user_dashboard'))
             else:
                 coord = {'lat': lat_float, 'lon': lon_float, 'box': selected_box}
-                # In real app, save this info in DB or session for multiple points
-                import os  # (already imported at top)
-
-                import os  # (already imported at top)
-
-                    return render_template(
-                        'map_view.html',
-                        coords=[coord],
-                        box=selected_box,
-                        mapbox_token=os.environ.get('MAPBOX_ACCESS_TOKEN')  # Pass token securely from env
-                    )
-
-
+                # In a real app, save this to DB or session to accumulate multiple coords/deliveries
+                return render_template(
+                    'map_view.html',
+                    coords=[coord],
+                    box=selected_box,
+                    mapbox_token=os.environ.get('MAPBOX_ACCESS_TOKEN')  # Pass token securely from env
+                )
         except (ValueError, TypeError):
             flash("Please enter valid latitude and longitude.", "danger")
+
     return render_template('dashboard.html', boxes=MEDICAL_BOXES)
 
-# Error handlers for unauth access can be added if desired.
+# Optional: add error handlers, etc.
 
 if __name__ == '__main__':
-    # For local debug only; Render runs with gunicorn.
+    # For local debug only; in Render use gunicorn
     app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
