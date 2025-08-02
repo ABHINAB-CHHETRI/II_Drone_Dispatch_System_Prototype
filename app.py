@@ -96,7 +96,15 @@ def user_dashboard():
             else:
                 coord = {'lat': lat_float, 'lon': lon_float, 'box': selected_box}
                 # In real app, save this info in DB or session for multiple points
-                return render_template('map_view.html', coords=[coord], box=selected_box)
+                import os  # (already imported at top)
+
+                return render_template(
+                    'map_view.html',
+                    coords=[coord],
+                    box=selected_box,
+                    mapbox_token=os.environ.get('pk.eyJ1IjoiYWJoaW5hYjEyMzc3IiwiYSI6ImNtZHR1M3piMDA0aW0yanNkMWE4a2x4am8ifQ.2BKj-8WsXiM9g3P0dVrAUw')  # Pass token securely from env
+                )
+
         except (ValueError, TypeError):
             flash("Please enter valid latitude and longitude.", "danger")
     return render_template('dashboard.html', boxes=MEDICAL_BOXES)
